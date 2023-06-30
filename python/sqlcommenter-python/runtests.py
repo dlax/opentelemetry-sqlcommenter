@@ -18,7 +18,7 @@ import os
 import sys
 import unittest
 
-# Django, Flask, psycopg2, and sqlalchemy are only installed in their
+# Django, Flask, psycopg, psycopg2, and sqlalchemy are only installed in their
 # respective testing environments. See tox.ini for details.
 
 try:
@@ -32,6 +32,11 @@ try:
     import pytest
 except ImportError:
     flask = None
+
+try:
+    import psycopg
+except ImportError:
+    psycopg = None
 
 try:
     import psycopg2
@@ -68,6 +73,8 @@ def main():
         run_django_tests()
     elif flask:
         run_flask_tests()
+    elif psycopg:
+        run_unittests('tests.psycopg')
     elif psycopg2:
         run_unittests('tests.psycopg2')
     elif sqlalchemy:

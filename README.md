@@ -8,6 +8,7 @@ SQLCommenter components for various languages
 
 - [X] [Python](python/sqlcommenter-python/README.md)
   - [X] [django](python/sqlcommenter-python/README.md#django)
+  - [X] [psycopg](python/sqlcommenter-python/README.md#psycopg)
   - [X] [psycopg2](python/sqlcommenter-python/README.md#psycopg2)
   - [X] [sqlalchemy](python/sqlcommenter-python/README.md#sqlalchemy)
 - [X] [Java](java/sqlcommenter-java/README.md)

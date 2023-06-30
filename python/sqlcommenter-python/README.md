@@ -8,6 +8,7 @@ Python modules for popular projects that add meta info to your SQL queries as co
 
  * [Django](#django)
  * [SQLAlchemy](#sqlalchemy)
+ * [Psycopg](#psycopg)
  * [Psycopg2](#psycopg2)
 
 ## Local Install
@@ -69,6 +70,37 @@ which will produce a backend log such as when viewed on Postgresql
 2019-05-28 11:52:06.527 PDT [64087] LOG:  statement: SELECT * FROM polls_question
 /*db_driver='psycopg2',framework='sqlalchemy%3A1.3.4',
 traceparent='00-5bd66ef5095369c7b0d1f8f4bd33716a-c532cb4098ac3dd2-01',
+tracestate='congo%%3Dt61rcWkgMzE%%2Crojo%%3D00f067aa0ba902b7'*/
+```
+
+### Psycopg
+
+Use the provided cursor factory to generate database cursors. All queries executed with such cursors will have the SQL comment prepended to them.
+
+```python
+import psycopg
+from opentelemetry.sqlcommenter.psycopg.extension import CommenterCursorFactory
+
+cursor_factory = CommenterCursorFactory(
+    with_db_driver=True,
+    with_dbapi_level=True,
+    with_dbapi_threadsafety=True,
+    with_driver_paramstyle=True,
+    with_libpq_version=True,
+    # you may use one of opencensus or opentelemetry
+    with_opencensus=True,
+    with_opentelemetry=True,
+)
+with psycopg.connect(..., cursor_factory=cursor_factory) as conn:
+    conn.execute(...) # comment will be added before execution
+```
+
+which will produce a backend log such as when viewed on Postgresql
+```shell
+2019-05-28 02:33:25.287 PDT [57302] LOG:  statement: SELECT * FROM
+polls_question /*db_driver='psycopg%%3A2.8.2%%20%%28dt%%20dec%%20pq3%%20ext%%20lo64%%29',
+dbapi_level='2.0',dbapi_threadsafety=2,driver_paramstyle='pyformat',
+libpq_version=100001,traceparent='00-5bd66ef5095369c7b0d1f8f4bd33716a-c532cb4098ac3dd2-01',
 tracestate='congo%%3Dt61rcWkgMzE%%2Crojo%%3D00f067aa0ba902b7'*/
 ```
 
